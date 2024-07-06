@@ -16,3 +16,6 @@ What is sent ?
 - STW : Speed Through Water (knots)
 - AWS : Apparent Wind Speed (knots)
 - AWA : Apparent Wind Angle (degrees/heading line)
+
+## GUI
+![](/signalk-to-traccar_config.png)
