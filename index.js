@@ -24,7 +24,7 @@ module.exports = function(app) {
     var plugin = {};
     var timerId
     
-    plugin.id = "sk-traccar-logger"
+    plugin.id = "sk-to-traccar"
     plugin.name = "Signal K logger to traccar"
     plugin.description = "Log Signal K data to traccar service."
 
