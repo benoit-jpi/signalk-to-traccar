@@ -1,0 +1,29 @@
+{
+    "name": "signalk-to-traccar",
+    "version": "0.1.0",
+    "description": "Signal K plugin to log data to traccar Rest API.",
+    "main": "index.js",
+    "scripts": {
+	"changelog": "github-changes -o benoit-jpi -r signalk-to-traccar -a --only-pulls --use-commit-body --data=pulls  --tag-name=v$npm_package_version",
+	"test": "mocha"
+    },
+    "repository": {
+	"type": "git",
+	"url": "git+https://github.com/benoit-jpi/signalk-to-traccar.git"
+    },
+    "keywords": [
+	"signalk-node-server-plugin"
+    ],
+    "author": "Jean-Pierre Benoit",
+    "license": "ISC",
+    "dependencies": {
+	"baconjs": "^0.7.88",
+	"debug": "^3.1.0",
+	"github-changes": "^2.0.3",
+	"lodash": "^4.17.4"
+  },
+  "bugs": {
+    "url": "https://github.com/benoit-jpi/signalk-to-traccar/issues"
+  },
+  "homepage": "https://github.com/benoit-jpi/signalk-to-traccar#readme"
+}
