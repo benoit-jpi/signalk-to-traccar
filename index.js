@@ -1,11 +1,11 @@
 const Bacon = require("baconjs");
-const debug = require("debug")("signalk:signalk-perf-logger");
+const debug = require("debug")("signalk:signalk-to-traccar");
 const util = require("util");
 const _ = require('lodash')
 const path = require('path')
 const fs = require('fs')
 const { spawn } = require('child_process')
-var request = require('request');
+const axios = require('axios')
 
 /*
 
@@ -23,26 +23,25 @@ TODO:
 module.exports = function(app) {
     var plugin = {};
     var timerId
-    var period = 300
     
     plugin.id = "sk-traccar-logger"
     plugin.name = "Signal K logger to traccar"
-    plugin.description = "Log Signal K data to traccar server."
+    plugin.description = "Log Signal K data to traccar service."
 
     plugin.schema = {
 	type: "object",
-	title: "Position and performance data logging to traccar server",
-	description: "Log Signal K position and performance data to traccar server.",
+	title: "Position and performance data logging to traccar service",
+	description: "Log Signal K position and performance data to traccar service.",
 	properties: {
 	    deviceid: {
 		type: 'string',
-		title: 'Device Id in the traccar database',
+		title: 'Device Id in the traccar service database',
 		default: null
 	    },
-	    ipaddress: {
+	    hosturl: {
 		type: 'string',
-		title: 'TCP endpoint IP address',
-                default: '0.0.0.0'
+		title: 'Traccar service host',
+                default: null
 	    },
             port: {
                 type: 'number',
@@ -65,8 +64,9 @@ module.exports = function(app) {
     plugin.start = function (options) {
 
 	context = options.context
+	deviceid = options.deviceid
 	period = options.period
-	ipaddress=options.ipaddress
+	hosturl=options.hosturl
 	port=options.port
 
 	timerId = setInterval(() => { postData() }, period * 1000 )
@@ -111,14 +111,6 @@ module.exports = function(app) {
 				value: 5.64159
 			    }
 			]
-		    },
-		    {
-			values: [
-			    {
-				path: 'environment.depth.belowTransducer',
-				value: 59
-			    }
-			]
 		    }
 		]
 	    })
@@ -132,28 +124,34 @@ module.exports = function(app) {
 		let aws=(Number(app.getSelfPath('environment.wind.speedApparent.value'))*0.5144444).toFixed(2)
 		let awa=(Number(app.getSelfPath('environment.wind.angleApparent.value'))*(180/Math.PI)).toFixed()
 
-		var myJSONObject = {
-		    id : deviceid,
-		    timestamp: timestamp,
-		    lat: latitude,
-		    lon: longitude,
-		    speed: sog,
-		    bearing: cog,
-		    stw : stw,
-		    aws: aws,
-		    awa: awa
-		};
+		const config = {
+		    headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		    }
+		}
+		
+		var params = new URLSearchParams()
+		params.append('id', deviceid)
+		params.append('timestamp', timestamp)
+		params.append('lat', latitude)
+		params.append('lon', longitude)
+		params.append('speed', sog)
+		params.append('bearing', cog)
+		params.append('stw', stw)
+		params.append('aws', aws)
+		params.append('awa', awa)
 
-		request({
-		    url: ipadresse+":"+port,
-		    method: "POST",
-		    json: true,   // <--Very important!!!
-		    body: myJSONObject
-		}, (err) => {
-		    if (err) throw err;
-		})
-	    } catch (err) {
-		console.log(err)
+		const createDataPoint = async () => {
+
+		    const res = await axios.post(hosturl+":"+port, params, config)
+		    app.debug(`sk-to-traccar req.status: ${res.status}`)
+		}
+		
+		createDataPoint();
+
 	    }
+	} catch (err) {
+	    console.log(err)
 	}
-    }
+    }	
+}
