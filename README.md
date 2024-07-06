@@ -18,4 +18,4 @@ What is sent ?
 - AWA : Apparent Wind Angle (degrees/heading line)
 
 ## GUI
-![](/signalk-to-traccar_config.png)
+![](/images/signalk-to-traccar_config.png)
