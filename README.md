@@ -4,9 +4,9 @@ A Signal K Node server plugin for logging data to a traccar server
 
 ## Configuration
 
-A device id, an IP address and a port have to be defined for the POST request.
+A device id, a host url, a port number have to be defined for the POST request. A period is also necessary for the scheduling.
 
-What is logged ?
+What is sent ?
 - deviceId
 - Timestamp
 - Latitude WGS84 (decimal degrees)
