@@ -37,6 +37,7 @@ module.exports = function(app) {
 		type: 'string',
 		title: 'Device Id in the traccar service database',
 		default: null
+//		enum: ['Signalk','toto123','My sailboat']
 	    },
 	    hosturl: {
 		type: 'string',
@@ -57,7 +58,7 @@ module.exports = function(app) {
 		type: 'string',
 		title: 'Subscription context',
 		default: 'vessels.self'
-	    },
+	    }
 	}
     }
 
