@@ -87,6 +87,7 @@ module.exports = function(app) {
 	    let datetime=app.getSelfPath('navigation.datetime.value')
 	    let timestamp=Date.parse(datetime)
 
+	    /*
 	    app.handleMessage(plugin.id, {
 		updates: [
 		    {
@@ -115,8 +116,9 @@ module.exports = function(app) {
 		    }
 		]
 	    })
+*/
 
-	    if ((tunix-timestamp) < period * 1000) { // only log if age of data < period
+//	    if ((tunix-timestamp) < period * 1000) { // only log if age of data < period
 		let longitude=Number(app.getSelfPath('navigation.position.value.longitude')).toFixed(6)
 		let latitude=Number(app.getSelfPath('navigation.position.value.latitude')).toFixed(6)
 		let sog=(Number(app.getSelfPath('navigation.speedOverGround.value'))*0.5144444).toFixed(2)
@@ -150,9 +152,9 @@ module.exports = function(app) {
 		
 		createDataPoint();
 
-	    }
+//	    }
 	} catch (err) {
 	    console.log(err)
 	}
-    }	
+    }
 }
