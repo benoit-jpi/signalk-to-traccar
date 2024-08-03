@@ -90,10 +90,10 @@ module.exports = function(app) {
 	    if ((tunix-timestamp) < period * 1000) { // only log if age of data < period
 		let longitude=Number(app.getSelfPath('navigation.position.value.longitude')).toFixed(6)
 		let latitude=Number(app.getSelfPath('navigation.position.value.latitude')).toFixed(6)
-		let sog=(Number(app.getSelfPath('navigation.speedOverGround.value'))*0.5144444).toFixed(2)
+		let sog=(Number(app.getSelfPath('navigation.speedOverGround.value'))*1.94384).toFixed(2)
 		let cog=(Number(app.getSelfPath('navigation.courseOverGroundTrue.value'))*(180/Math.PI)).toFixed()
-		let stw=(Number(app.getSelfPath('navigation.speedThroughWater.value'))*0.5144444).toFixed(2)
-		let aws=(Number(app.getSelfPath('environment.wind.speedApparent.value'))*0.5144444).toFixed(2)
+		let stw=(Number(app.getSelfPath('navigation.speedThroughWater.value'))*1.94384).toFixed(2)
+		let aws=(Number(app.getSelfPath('environment.wind.speedApparent.value'))*1.94384).toFixed(2)
 		let awa=(Number(app.getSelfPath('environment.wind.angleApparent.value'))*(180/Math.PI)).toFixed()
 
 		const config = {
