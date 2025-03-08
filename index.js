@@ -21,12 +21,12 @@ TODO:
 */
 
 module.exports = function(app) {
-    var plugin = {};
+    const plugin = {};
     var timerId
-    
+ 
     plugin.id = "sk-to-traccar"
-    plugin.name = "Signal K logger to traccar"
-    plugin.description = "Log Signal K data to traccar service."
+    plugin.name = "Signal K Traccar Logger"
+    plugin.description = "Log Signal K navigation data to Traccar service."
 
     plugin.schema = {
 	type: "object",
@@ -39,7 +39,7 @@ module.exports = function(app) {
 		default: null
 //		enum: ['Signalk','toto123','My sailboat']
 	    },
-	    hosturl: {
+	    hostname: {
 		type: 'string',
 		title: 'Traccar service host',
                 default: null
@@ -53,24 +53,24 @@ module.exports = function(app) {
 		type: 'number',
 		title: 'Logging period.',
 		default: 300
-	    },
-	    context: {
-		type: 'string',
-		title: 'Subscription context',
-		default: 'vessels.self'
 	    }
 	}
     }
 
     plugin.start = function (options) {
 
-	context = options.context
 	deviceid = options.deviceid
-	period = options.period
-	hosturl=options.hosturl
-	port=options.port
+	hostname = options.hostname
+	port = options.port
+        period = options.period
 
-	timerId = setInterval(() => { postData() }, period * 1000 )
+	if (typeof hostname === 'undefined') {
+	    app.setProviderStatus('hostname not defined, plugin disabled')
+	    return
+	}
+
+	const url='https://'+hostname+":"+port
+	timerId = setInterval(() => { sendData(url) }, period * 1000 )
     }
     
     plugin.stop = function () {
@@ -78,9 +78,9 @@ module.exports = function(app) {
 	clearInterval(timerId)
 
     }
-    return plugin
+    return plugin;
 
-    function postData() {
+    function sendData(url) {
 	//	timestamp,lat,lon,sog,cog,stw,aws,awa
 	try {
 	    let tunix=Math.round(+new Date())
@@ -101,7 +101,7 @@ module.exports = function(app) {
 			'Content-Type': 'application/x-www-form-urlencoded'
 		    }
 		}
-		
+
 		var params = new URLSearchParams()
 		params.append('id', deviceid)
 		params.append('timestamp', timestamp)
@@ -113,13 +113,17 @@ module.exports = function(app) {
 		params.append('aws', aws)
 		params.append('awa', awa)
 
-		const createDataPoint = async () => {
-
-		    const res = await axios.post(hosturl+":"+port, params, config)
-		    app.debug(`sk-to-traccar req.status: ${res.status}`)
+		const postDataPoint = async () => {
+		    try {
+			const res = await axios.post(url, params, config)
+			app.debug(`req.status: ${res.status}`)
+		    } catch (error) {
+			// Handle error
+			console.error(error);
+		    }
 		}
-		
-		createDataPoint();
+
+		postDataPoint();
 
 	    }
 	} catch (err) {
