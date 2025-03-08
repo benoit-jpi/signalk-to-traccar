@@ -173,11 +173,6 @@ axios@*:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-baconjs@^0.7.88:
-  version "0.7.95"
-  resolved "https://registry.yarnpkg.com/baconjs/-/baconjs-0.7.95.tgz#96869a814c730e62e5991944eb2fcb8c97171615"
-  integrity sha512-3qp0GuAfEUlJybSVPQ2oai8VYO0aSTJf4wP/jYZpgaffEXi31VBcqSlVmD8ahmXXGzgdO+yFk9onDnt2ZJJXxA==
-
 before-after-hook@^2.2.0:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.2.3.tgz#c51e809c81a4e354084422b9b26bad88249c517c"
