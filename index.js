@@ -24,33 +24,38 @@ module.exports = function(app) {
     var timerId
  
     plugin.id = "sk-to-traccar"
-    plugin.name = "Signal K Traccar Logger"
-    plugin.description = "Log Signal K navigation data to Traccar service."
+    plugin.name = "Traccar Logger"
+    plugin.description = "Log navigation data to Traccar service."
 
     plugin.schema = {
 	type: "object",
-	title: "Position and performance data logging to traccar service",
-	description: "Log Signal K position and performance data to traccar service.",
+	title: "Sailboat position and performance data logging to traccar service",
+	description: "Log sailboat position and parameters to traccar service.",
 	properties: {
 	    deviceid: {
 		type: 'string',
-		title: 'Device Id in the traccar service database',
-		default: null
-//		enum: ['Signalk','toto123','My sailboat']
+		title: 'Device Id',
+		default: 'My sailboat traccar id'
+	    },
+	    protocol: {
+		type: 'string',
+		title: 'Protocol to use',
+		default: 'http',
+		enum: ['http','https']
 	    },
 	    hostname: {
 		type: 'string',
-		title: 'Traccar service host',
+		title: 'Host name / address',
                 default: null
 	    },
             port: {
                 type: 'number',
-                title: 'Port',
+                title: 'Port number',
                 default: 5055
             },
 	    period: {
 		type: 'number',
-		title: 'Logging period.',
+		title: 'Logging period (s)',
 		default: 300
 	    }
 	}
@@ -59,6 +64,7 @@ module.exports = function(app) {
     plugin.start = function (options) {
 
 	deviceid = options.deviceid
+	protocol = options.protocol
 	hostname = options.hostname
 	port = options.port
         period = options.period
@@ -68,7 +74,7 @@ module.exports = function(app) {
 	    return
 	}
 
-	const url='https://'+hostname+":"+port
+	const url=protocol+'://'+hostname+":"+port
 	timerId = setInterval(() => { sendData(url) }, period * 1000 )
     }
     
